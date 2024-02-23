@@ -2,7 +2,13 @@
 
 name: make release packages
 
-on: push
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   build-and-release-macos:
