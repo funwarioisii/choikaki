@@ -9,3 +9,8 @@ Draft Editor for mail, SNS, etc.
 ```shell
 flutter pub run flutter_launcher_icons:main
 ```
+
+### format
+```shell
+dart format --fix .
+```

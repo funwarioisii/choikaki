@@ -42,7 +42,7 @@ class Page extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = useState<String>('こんにちは');
+    final text = useState<String>('');
 
     Future<void> copyToClipboard() async {
       final data = ClipboardData(text: text.value);
@@ -50,14 +50,18 @@ class Page extends HookWidget {
     }
 
     return Scaffold(
-        body: const Padding(
-          padding: EdgeInsets.all(8.0),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: TextField(
             keyboardType: TextInputType.multiline,
             maxLines: 20,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "ちょいっと書く ✍️",
             ),
+            onChanged: (value) {
+              text.value = value;
+            },
+            autofocus: true,
           ),
         ),
         floatingActionButton: FloatingActionButton(
