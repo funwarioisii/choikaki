@@ -1,72 +1,63 @@
+import 'package:choikaki/components/pages/home_page.dart';
+import 'package:choikaki/components/pages/setting_page.dart';
+import 'package:choikaki/service/premium.dart';
+import 'package:choikaki/service/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  runApp(const ChoikakiApp());
+  runApp(const ProviderScope(child: ChoikakiApp()));
 }
 
-class ChoikakiApp extends StatelessWidget {
-  const ChoikakiApp({super.key});
+class CurrentTheme extends StateNotifier<ChoikakiTheme> {
+  CurrentTheme() : super(defaultTheme);
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Choikaki',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const Page());
+  void setTheme(ChoikakiTheme theme) {
+    state = theme;
   }
 }
 
-class Page extends HookWidget {
-  const Page({super.key});
+final currentThemeProvider =
+    StateNotifierProvider<CurrentTheme, ChoikakiTheme>((_) => CurrentTheme());
+
+enum Page {
+  home,
+  settings,
+}
+
+class ChoikakiApp extends HookConsumerWidget {
+  const ChoikakiApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final text = useState<String>('');
+  Widget build(BuildContext context, ref) {
+    final displayedPage = useState<Page>(Page.home);
 
-    Future<void> copyToClipboard() async {
-      final data = ClipboardData(text: text.value);
-      await Clipboard.setData(data);
+    void toSettingPage() {
+      displayedPage.value = Page.settings;
     }
 
-    return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            keyboardType: TextInputType.multiline,
-            maxLines: 20,
-            decoration: const InputDecoration(
-              hintText: "ちょいっと書く ✍️",
-            ),
-            onChanged: (value) {
-              text.value = value;
-            },
-            autofocus: true,
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: copyToClipboard,
-          child: const Icon(Icons.copy),
-        ));
+    void toHomePage() {
+      displayedPage.value = Page.home;
+    }
+
+    useEffect(() {
+      () async {
+        final isps = await isPremium();
+        if (isps) {
+          final theme = await getTheme();
+          ref.read(currentThemeProvider.notifier).setTheme(theme);
+        }
+      }();
+      return null;
+    }, const []);
+
+    return MaterialApp(
+      title: 'Choikaki',
+      home: switch (displayedPage.value) {
+        Page.home => HomePage(toSettingPage: toSettingPage),
+        Page.settings => SettingPage(toHomePage: toHomePage),
+      },
+    );
   }
 }
