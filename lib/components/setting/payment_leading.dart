@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const paymentUrl = 'https://blog.funwarioisii.me/article/5';
+const paymentUrl = 'https://blog.funwarioisii.me/article/3';
 
 class PaymentLeading extends StatelessWidget {
   const PaymentLeading({super.key});

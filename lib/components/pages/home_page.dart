@@ -41,6 +41,7 @@ class HomePage extends HookConsumerWidget {
             backgroundColor: theme.primaryColor,
             child: const Icon(
               Icons.copy,
+              color: Colors.white70,
             ),
           ),
         ));
