@@ -43,7 +43,7 @@ class ColorSettingModal extends HookConsumerWidget {
                   ),
                 ],
               )
-            : PaymentLeading(),
+            : const PaymentLeading(),
       ),
     );
   }

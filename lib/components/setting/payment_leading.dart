@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 const paymentUrl = 'https://blog.funwarioisii.me/article/5';
 
 class PaymentLeading extends StatelessWidget {
+  const PaymentLeading({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
