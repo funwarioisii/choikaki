@@ -3,7 +3,7 @@ import 'package:choikaki/service/premium.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-const secretCode = 'CHOIKAKI2024';
+const secretCode = String.fromEnvironment('PAYMENT_SECRET_CODE');
 
 bool validateCode(String code) => code == secretCode;
 
@@ -51,7 +51,7 @@ class EnablePremiumModal extends HookWidget {
                     child: Text('コードを入力するとデコレーション機能が使えるようになります。'),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       onChanged: (value) {
                         code.value = value;
